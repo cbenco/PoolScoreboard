@@ -1,0 +1,18 @@
+﻿using NUnit.Framework;
+using PoolScoreboard.Application;
+using PoolScoreboard.Common;
+
+namespace PoolScoreboard.Tests
+{
+    [TestFixture]
+    public class EightBallRackTests
+    {
+        [Test]
+        public void test_that_eight_ball_rack_contains_correct_number_of_balls()
+        {
+            EightBallPoolRack rack = new EightBallPoolRack();
+            
+            Assert.That(rack.Count == Constants.NumberOfBalls.EightBall);
+        }
+    }
+}
