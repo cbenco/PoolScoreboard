@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Dynamic;
+using System.Linq.Expressions;
+using PoolScoreboard.Common;
 
 namespace PoolScoreboard.Application
 {
@@ -8,20 +11,36 @@ namespace PoolScoreboard.Application
         bool OnTable { get; set; }
         ITeam SunkBy { get; set; }
         bool LegallySunk { get; set; }
-        
+        BallClass Class { get; }
+
         void Sink();
     }
     
-    public class PoolBall : IBall
+    public abstract class Ball : IBall
     {
-        public string Identifier { get; }
-        public bool OnTable { get; set; }
-        public ITeam SunkBy { get; set; }
-        public bool LegallySunk { get; set; }
-        
-        
+        public virtual string Identifier { get; protected set; }
+        public virtual bool OnTable { get; set; }
+        public virtual ITeam SunkBy { get; set; }
+        public virtual bool LegallySunk { get; set; }
+        public virtual BallClass Class { get; }
+
+        public virtual void Sink()
+        {
+            SunkBy = Table.CurrentShooter;
+            OnTable = false;
+        }
+    }
+    
+    public class CueBall : Ball
+    {
+        public override string Identifier => Constants.BallNames.CueBall;
+        public override bool LegallySunk { get; set; } = false;
+    }
+    
+    public sealed class PoolBall : Ball
+    {
         private int Number => int.Parse(Identifier);
-        public BallClass Class
+        public override BallClass Class
         {
             get
             {
@@ -39,18 +58,14 @@ namespace PoolScoreboard.Application
             LegallySunk = false;
             SunkBy = null;
         }
-        
-        public void Sink()
-        {
-            SunkBy = Table.CurrentShooter;
-            OnTable = false;
-        }
     }
     
     public enum BallClass
     {
         Solids,
         Stripes,
-        EightBall
+        EightBall,
+        Red,
+        Colour
     }
 }

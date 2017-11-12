@@ -8,5 +8,10 @@ namespace PoolScoreboard.Common
         {
             public const int EightBall = 15;
         }
+
+        public static class BallNames
+        {
+            public const string CueBall = "CUE";
+        }
     }
 }

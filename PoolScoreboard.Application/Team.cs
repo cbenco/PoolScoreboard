@@ -7,29 +7,52 @@ namespace PoolScoreboard.Application
     {
         List<IPlayer> Players { get; set; }
         bool Breaker { get; set; }
-        int ShotCount { get; set; }
+        int ShotCount { get; }
+        
+        ShotResult TakeShot(List<IBall> sunk);
     }
     
-    public class Team : ITeam
+    public abstract class Team : ITeam
     {
         public List<IPlayer> Players { get; set; }
         public bool Breaker { get; set; }
-        public int ShotCount { get; set; }
-        
-        public IPlayer ThisShooter => Players[_lastShooterIndex];
-        public IPlayer NextShooter => Players[_lastShooterIndex++];
+        public int ShotCount { get; private set; } = 0;
 
-        protected int _lastShooterIndex;
+        public IPlayer ThisShooter => Players[LastShooterIndex];
+        public IPlayer NextShooter => Players[LastShooterIndex++];
         
-        public Team(IEnumerable<IPlayer> players, int firstShooter = 0)
+        protected int LastShooterIndex;
+        
+        protected Team(IEnumerable<IPlayer> players, int firstShooter = 0)
         {
             Players = players.ToList();
-            _lastShooterIndex = firstShooter;
+            LastShooterIndex = firstShooter;
         }
+        
+        public ShotResult TakeShot(List<IBall> sunk)
+        {
+            ShotCount++;
+            var result = new ShotResult
+            {
+                ShotBy = this,
+                Shooter = ThisShooter,
+                BallsSunk = sunk
+            };
+            return result;
+        }
+        
+        public BallClass Shooting { get; set; }
         
         protected void UpdateLastShooterIndex()
         {
-            if (++_lastShooterIndex >= Players.Count) _lastShooterIndex = 0;
+            if (++LastShooterIndex >= Players.Count) LastShooterIndex = 0;
         }
+    }
+    
+    public class EightBallPoolTeam : Team
+    {
+        public EightBallPoolTeam(IEnumerable<IPlayer> players, int firstShooter = 0) :
+            base(players, firstShooter)
+        { }
     }
 }

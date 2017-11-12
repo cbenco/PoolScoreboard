@@ -8,50 +8,36 @@ namespace PoolScoreboard.Tests
     public class TeamTests
     {
         [Test]
-        public void test_that_last_shooter_is_set_to_zero_on_overflow()
+        [TestCase(4)]
+        [TestCase(1)]
+        [TestCase(50)]
+        public void test_that_last_shooter_is_set_to_zero_on_overflow(int maxPlayers)
         {
-            var players = new List<Player>
+            var team = SetupTeam(maxPlayers);
+
+            for (var i = 1; i < maxPlayers; i++)
             {
-                new Player
-                {
-                    Id = 1,
-                    Name = "Jim"
-                },
-                new Player
-                {
-                    Id = 1,
-                    Name = "Tim"
-                },
-                new Player
-                {
-                    Id = 1,
-                    Name = "Jon"
-                },
-                new Player
-                {
-                    Id = 1,
-                    Name = "Sam"
-                }
-            };
-            var team = new TeamTestWrapper(players);
-            team.UpdateLastShooterIndex();
-            Assert.That(team.LastShooterIndex == 1);
-            team.UpdateLastShooterIndex();
-            Assert.That(team.LastShooterIndex == 2);
-            team.UpdateLastShooterIndex();
-            Assert.That(team.LastShooterIndex == 3);
+                team.UpdateLastShooterIndex();
+                Assert.That(team.LastShooterIndex == i);
+            }
             team.UpdateLastShooterIndex();
             Assert.That(team.LastShooterIndex == 0);
         }
         
+        private static TeamTestWrapper SetupTeam(int numberOfPlayers)
+        {
+            var players = new List<Player>();
+            for (int i = 0; i < numberOfPlayers; i++)
+                players.Add(new Player
+                    {Id = numberOfPlayers + 1});
+            return new TeamTestWrapper(players);
+        }
+        
         private class TeamTestWrapper : Team
         {
-            public TeamTestWrapper(List<Player> players) : base(players)
-            {
-                
-            }
+            public TeamTestWrapper(IEnumerable<Player> players) : base(players) {}
             
-            public int LastShooterIndex => _lastShooterIndex;
+            public int LastShooterIndex => base.LastShooterIndex;
             public void UpdateLastShooterIndex()
             {
                 base.UpdateLastShooterIndex();

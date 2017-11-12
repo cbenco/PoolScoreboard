@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using PoolScoreboard.Common;
 
@@ -11,7 +12,7 @@ namespace PoolScoreboard.Application
         void SinkBall(string identifier);
     }
     
-    public abstract class Rack : List<IBall>, IRack
+    public abstract class Rack<T> : List<IBall>, IRack
     {
         private IBall Ball(string identifier)
         {
@@ -31,7 +32,7 @@ namespace PoolScoreboard.Application
         protected abstract bool LegalIdentifier(string identifier);
     }
     
-    public class EightBallPoolRack : Rack
+    public class EightBallPoolRack : Rack<PoolBall>
     {
         public EightBallPoolRack()
         {
@@ -40,6 +41,8 @@ namespace PoolScoreboard.Application
                 Add(new PoolBall(i));
             }
         }
+        
+        public bool OpenTable => this.All(b => b.OnTable || !b.LegallySunk);
         
         protected override bool LegalIdentifier(string identifier)
         {
