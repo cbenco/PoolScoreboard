@@ -28,6 +28,7 @@ namespace PoolScoreboard.Application
         {
             SunkBy = Table.CurrentShooter;
             OnTable = false;
+            LegallySunk = true;
         }
     }
     
