@@ -24,6 +24,14 @@ namespace PoolScoreboard.Interface
             };
         }
 
+        public ITeam CreateTeam(IEnumerable<IPlayer> players)
+        {
+            return new EightBallPoolTeam(players)
+            {
+                Shooting = BallClass.Neither
+            };
+        }
+
         public void TakeShot()
         {
             

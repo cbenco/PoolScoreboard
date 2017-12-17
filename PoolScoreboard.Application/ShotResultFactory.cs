@@ -23,9 +23,7 @@ namespace PoolScoreboard.Application
                 result = new PoolShotResult();
                 result.ShootingTeam = team;
                 result.Shooter = team.ThisShooter;
-                result.ObjectBall = int.TryParse(objectBall, out var i)
-                    ? rack.Ball(objectBall)
-                    : null;
+                result.ObjectBall = rack.Ball(objectBall);
                 result.BallsSunk = sunk.Select(rack.Ball).ToList();
                 result.Type = EightBallPoolRules.ValidateShot(rack, result, isBreak);
                 rack.SinkBalls(sunk, result.LegalPot);

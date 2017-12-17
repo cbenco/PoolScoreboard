@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="BallTests.cs" />
     <Compile Include="EightBallRackTests.cs" />
+    <Compile Include="EightBallRackTestWrapper.cs" />
     <Compile Include="EightBallRuleTests.cs" />
     <Compile Include="TeamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

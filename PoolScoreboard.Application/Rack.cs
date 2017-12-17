@@ -8,6 +8,10 @@ using PoolScoreboard.Common;
 
 namespace PoolScoreboard.Application
 {
+    /// <summary>
+    /// Holds all the shootable balls on the table.
+    /// Does not include the cue ball.
+    /// </summary>
     public interface IRack
     {
         void SinkBalls(IEnumerable<string> identifiers, bool legal);
@@ -25,7 +29,7 @@ namespace PoolScoreboard.Application
                 throw new ArgumentException("Invalid ball identifier.");
             }
             if (identifier == Constants.BallNames.CueBall)
-                return Table.cueBall;
+                return Table.CueBall;
             
             return this.FirstOrDefault(b => b.Identifier == identifier);
         }
@@ -35,7 +39,7 @@ namespace PoolScoreboard.Application
                 SinkBall(identifier, legal);
         }
         
-        private void SinkBall(string identifier, bool legal)
+        protected void SinkBall(string identifier, bool legal)
         {
             Ball(identifier).Sink(legal);
         }
@@ -59,6 +63,9 @@ namespace PoolScoreboard.Application
         public override bool GameOver => !this.First(b => b.Number == 8).OnTable;
         
         public bool OpenTable => this.All(b => b.OnTable || !b.LegallySunk);
+        
+        public bool HasAllColours => this.Count(b => b.Class == BallClass.Solids) == 7 &&
+                                     this.Count(b => b.Class == BallClass.Solids) == 7;
         
         protected override bool LegalIdentifier(string identifier)
         {

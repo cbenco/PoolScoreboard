@@ -31,10 +31,14 @@ namespace PoolScoreboard.Tests
             
             Assert.IsTrue(!rack.OpenTable);
         }
-        
-        private class EightBallRackTestWrapper : EightBallPoolRack
+
+        [Test]
+        public void test_open_table_when_ball_illegally_sunk()
         {
+            var rack = new EightBallRackTestWrapper();
+            rack.SinkBall("1", false);
             
+            Assert.IsTrue(rack.OpenTable);
         }
     }
 }

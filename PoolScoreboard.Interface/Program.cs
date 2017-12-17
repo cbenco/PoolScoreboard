@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Linq;
 using PoolScoreboard.Application;
 
 namespace PoolScoreboard.Interface
@@ -10,14 +11,27 @@ namespace PoolScoreboard.Interface
         public static void Main(string[] args)
         {
             GameController controller = new GameController();
-            
-            Console.Write("Enter player 1: ");
-            var player1 = Console.ReadLine();
-            Console.Write("Enter player 2: ");
-            var player2 = Console.ReadLine();
 
-            var team1 = controller.CreateTeam(new[] {player1});
-            var team2 = controller.CreateTeam(new[] {player2});
+            int id = 0;
+            string nameEntered = string.Empty;
+            var players = new List<IPlayer>();
+            while (nameEntered != "GO")
+            {
+                Console.Write("Enter player 1 or type GO to continue: ");
+                nameEntered = Console.ReadLine();
+                if (nameEntered != "GO")
+                {
+                    players.Add(new Player
+                    {
+                        Name = nameEntered,
+                        Id = id
+                    });
+                }
+                id++;
+            }
+            
+            var team1 = controller.CreateTeam(players.Where(p => p.Id % 2 != 0));
+            var team2 = controller.CreateTeam(players.Where(p => p.Id % 2 == 0));
 
             var game = controller.CreateEightBallPoolGame(team1, team2);
             
@@ -39,6 +53,7 @@ namespace PoolScoreboard.Interface
                 }
                 Console.WriteLine(game.PlayShot(objectBall, sunk).ToString());
             }
+            Console.WriteLine("Game over!");
             Console.Read();
         }
     }

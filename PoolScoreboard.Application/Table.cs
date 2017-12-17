@@ -15,10 +15,10 @@ namespace PoolScoreboard.Application
         private static ITeam Team2 { get; set; }
 
         public Frame CurrentFrame;
-        public List<Frame> Frames;
+        public List<Frame> Frames { get; set; }
 
         private readonly IRack _balls;
-        public static readonly IBall cueBall = new CueBall();
+        public static readonly IBall CueBall = new CueBall();
 
         public bool GameOver => _balls.GameOver;
         
@@ -30,7 +30,11 @@ namespace PoolScoreboard.Application
 
             CurrentShooter = team1;
             Frames = new List<Frame>();
-            CurrentFrame = new Frame();
+            CurrentFrame = new Frame
+            {
+                Players = Team1.Players.Union(Team2.Players).ToList()
+            };
+            Frames.Add(CurrentFrame);
         }
         
         public ShotResult PlayShot(string objectBall, IEnumerable<string> sunk)
@@ -47,7 +51,7 @@ namespace PoolScoreboard.Application
                 //Cycle teams
                 CurrentShooter = teamNotShooting;
             
-            cueBall.OnTable = true;
+            CueBall.OnTable = true;
             CurrentFrame.Shots.Add(shotResult);
             return shotResult;
         }
