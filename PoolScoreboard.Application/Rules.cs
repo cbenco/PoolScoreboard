@@ -87,7 +87,7 @@ namespace PoolScoreboard.Application
         
         private static bool HasBallsOnTable(EightBallPoolRack rack, ITeam team)
         {
-            return rack.Any(x => x.Class == team.Class && x.OnTable);
+            return team.Class != BallClass.EightBall && rack.Any(x => x.Class == team.Class && x.OnTable);
         }
         
         private static bool MissedObjectBall(IBall objectBall)

@@ -9,7 +9,7 @@ namespace PoolScoreboard.Application
         public IPlayer Shooter { get; set; }
         public IBall ObjectBall { get; set; }
         public IEnumerable<IBall> BallsSunk { get; set; }
-        public bool LegalPot => Type == ShotResultType.LegalPot; //legalise it
+        public bool LegalPot => Type == ShotResultType.LegalPot || Type == ShotResultType.Win;
         public bool FirstLegalPot { get; set; }
         public ShotResultType Type { get; set; }
 
