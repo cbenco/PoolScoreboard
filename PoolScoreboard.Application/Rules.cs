@@ -15,8 +15,10 @@ namespace PoolScoreboard.Application
         {
             var ballsSunk = result.BallsSunk.ToList();
 
-            if (Scratch(result.ObjectBall))
-                return ShotResultType.Scratch;
+            if (MissedObjectBall(result.ObjectBall))
+                if (rack.HasNoColours)
+                    return ShotResultType.Loss;
+                else return ShotResultType.MissedObjectBall;
             
             if (WrongObjectBall((EightBallPoolRack) rack, result.ObjectBall, result.ShootingTeam))
                 return ShotResultType.WrongObjectBall; //Hit the opponent's ball first
@@ -26,14 +28,18 @@ namespace PoolScoreboard.Application
 
             if (SunkBlack(ballsSunk))
             {
-                if (HasBallsOnTable((EightBallPoolRack) rack, result.ShootingTeam) || WentInOff(ballsSunk))
-                    return ShotResultType.Loss; //Sunk 8 ball early
+                if (HasBallsOnTable((EightBallPoolRack) rack, result.ShootingTeam) || 
+                    WentInOff(ballsSunk) || 
+                    SunkOpponentBall(ballsSunk, result.ShootingTeam))
+                    return ShotResultType.Loss; //Sunk 8 ball early or sunk opponent's ball
                 if (!HasBallsOnTable((EightBallPoolRack) rack, result.ShootingTeam)) //Sunk the 8 legally (or :O on the break)
                     return ShotResultType.Win;
             }
             
             if (WentInOff(ballsSunk)) 
-                return ShotResultType.WentInOff; //Sunk the cue ball
+                if (rack.HasNo(result.ShootingTeam.Shooting))
+                    return ShotResultType.Loss;
+                else return ShotResultType.WentInOff; //Sunk the cue ball
 
             if (SunkOpponentBall(ballsSunk, result.ShootingTeam))
                 return ShotResultType.SunkOpponentsBall; //Sunk the opponent's balls, turn ends
@@ -46,6 +52,8 @@ namespace PoolScoreboard.Application
         
         private static bool WrongObjectBall(EightBallPoolRack rack, IBall objectBall, ITeam shooter)
         {
+            if (objectBall?.Identifier == "8" && !HasBallsOnTable(rack, shooter))
+                return false;
             return !rack.OpenTable && objectBall.Class != shooter.Shooting;
         }
         
@@ -82,10 +90,10 @@ namespace PoolScoreboard.Application
         
         private static bool HasBallsOnTable(EightBallPoolRack rack, ITeam team)
         {
-            return rack.Any(x => x.Class == team.Shooting && !x.OnTable);
+            return rack.Any(x => x.Class == team.Shooting && x.OnTable);
         }
         
-        private static bool Scratch(IBall objectBall)
+        private static bool MissedObjectBall(IBall objectBall)
         {
             return objectBall == null;
         }

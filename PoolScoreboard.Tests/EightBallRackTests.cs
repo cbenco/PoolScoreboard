@@ -10,7 +10,7 @@ namespace PoolScoreboard.Tests
         [Test]
         public void test_that_eight_ball_rack_contains_correct_number_of_balls()
         {
-            EightBallPoolRack rack = new EightBallPoolRack();
+            var rack = new EightBallRackTestWrapper();
             
             Assert.That(rack.Count == Constants.NumberOfBalls.EightBall);
         }
@@ -39,6 +39,13 @@ namespace PoolScoreboard.Tests
             rack.SinkBall("1", false);
             
             Assert.IsTrue(rack.OpenTable);
+        }
+
+        [Test]
+        public void test_hasnocolours_calculates_correctly()
+        {
+            var rack = new EightBallRackTestWrapper();
+            
         }
     }
 }

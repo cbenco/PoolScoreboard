@@ -18,6 +18,8 @@ namespace PoolScoreboard.Application
         IBall Ball(string identifier);
         bool IsBreak { get; }
         bool GameOver { get; }
+        bool HasNoColours { get; }
+        bool HasNo(BallClass colour);
     }
     
     public abstract class Rack<T> : List<T>, IRack where T : IBall
@@ -46,6 +48,16 @@ namespace PoolScoreboard.Application
 
         public virtual bool IsBreak { get; }
         public virtual bool GameOver { get; }
+        public virtual bool HasNoColours { get; }
+        public virtual bool HasAllColours { get; }
+
+        public virtual bool HasNo(BallClass colour)
+        {
+            if (colour == BallClass.Neither)
+                return false;
+            return this.Where(b => b.Class == colour).All(b => !b.OnTable);
+        }
+        
         protected abstract bool LegalIdentifier(string identifier);
     }
     
@@ -64,8 +76,10 @@ namespace PoolScoreboard.Application
         
         public bool OpenTable => this.All(b => b.OnTable || !b.LegallySunk);
         
-        public bool HasAllColours => this.Count(b => b.Class == BallClass.Solids) == 7 &&
-                                     this.Count(b => b.Class == BallClass.Solids) == 7;
+        public override bool HasAllColours => this.Count(b => b.Class == BallClass.Solids && b.OnTable) == 7 &&
+                                     this.Count(b => b.Class == BallClass.Stripes && b.OnTable) == 7;
+        public override bool HasNoColours => this.Where(b => b.Class == BallClass.Solids).All(b => !b.OnTable) &&
+                                     this.Where(b => b.Class == BallClass.Stripes).All(b => !b.OnTable);
         
         protected override bool LegalIdentifier(string identifier)
         {

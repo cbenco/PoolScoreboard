@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 using PoolScoreboard.Common;
 
@@ -55,7 +56,7 @@ namespace PoolScoreboard.Application
             CurrentFrame.Shots.Add(shotResult);
             return shotResult;
         }
-
+        
         private ITeam GetTeamNotShooting()
         {
             return CurrentShooter == Team1 ? Team2 : Team1;

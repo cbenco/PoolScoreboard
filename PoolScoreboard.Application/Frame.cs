@@ -20,7 +20,7 @@ namespace PoolScoreboard.Application
             get => _players ?? (_players = new List<IPlayer>());
             set => _players = value;
         }
-
+        
         private List<IBall> _sinkableBalls;
         public List<IBall> Sinkable
         {

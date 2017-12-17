@@ -47,7 +47,7 @@ namespace PoolScoreboard.Application
         WentInOff,
         SunkBothOnBreak,
         SunkOpponentsBall,
-        Scratch,
+        MissedObjectBall,
         Win,
         Loss
     }

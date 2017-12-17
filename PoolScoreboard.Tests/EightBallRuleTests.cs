@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NUnit.Framework;
 using PoolScoreboard.Application;
@@ -43,19 +44,39 @@ namespace PoolScoreboard.Tests
             Assert.AreEqual(result.Type, expected);
         }
 
-        private ShotResult SetUpShotResult(string objectBall, IEnumerable<string> sunk, EightBallRackTestWrapper rack = null, 
-                                           ITeam team1 = null, ITeam team2 = null, BallClass shooting = BallClass.Neither, 
-                                           bool isBreak = true)
+        [Test]
+        public void test_win_conditions()
         {
-            var balls = rack ?? new EightBallRackTestWrapper();
-            if (!isBreak)
-                balls.SinkBall("2", true);
+            var result = SetUpShotResult("8", new[] {"8"}, sinkAll: true);
+            
+            Assert.AreEqual(result.Type, ShotResultType.Win);
+        }
+
+        [Test]
+        [TestCase("1", new[] {"8"}, false, false)]
+        [TestCase("8", new[] {"8", "CUE"}, false)] //Go in off
+        [TestCase("8", new[] {"8", "13"}, false)] //Sink opponent ball + black
+        [TestCase("8", new[] {"CUE"}, true)] //Foul with only black up
+        [TestCase(null, new string[] {}, true)] //Foul with only black up
+        public void test_the_two_sweetest_words_in_the_english_language(string objectBall, IEnumerable<string> ballsSunk, bool sinkAll, bool sinkAllSolids = true)
+        {
+            var result = SetUpShotResult(objectBall, ballsSunk, shooting: BallClass.Solids, sinkAll: sinkAll, sinkAllSolids: sinkAllSolids);
+            
+            Assert.AreEqual(result.Type, ShotResultType.Loss);
+        }
+
+        private ShotResult SetUpShotResult(string objectBall, IEnumerable<string> sunk, ITeam team1 = null, ITeam team2 = null, 
+                                BallClass shooting = BallClass.Neither, bool isBreak = true, bool sinkAll = false,
+                                bool sinkAllSolids = false)
+        {
+            var rack = new EightBallRackTestWrapper(isBreak, sinkAll, sinkAllSolids);
+            
             var firstTeam = team1 ?? SetUpTeam(1, shooting);
             var secondTeam = team2 ?? SetUpTeam(1, shooting);
             var shotResultFactory = new ShotResultFactory();
-            return shotResultFactory.Create(Game.EightBallPool, firstTeam, balls, objectBall, sunk);
+            return shotResultFactory.Create(Game.EightBallPool, firstTeam, rack, objectBall, sunk);
         }
-
+        
         private Team SetUpTeam(int numberOfPlayers, BallClass shooting = BallClass.Neither)
         {
             List<Player> players = new List<Player>();
