@@ -25,33 +25,46 @@ namespace PoolScoreboard.Tests
         }
         
         [Test]
-        [TestCase("1", new[] {"1"}, BallClass.Solids, ShotResultType.LegalPot)]
-        [TestCase("1", new[] {"4"}, BallClass.Solids, ShotResultType.LegalPot)]
-        [TestCase("9", new string[]{}, BallClass.Solids, ShotResultType.WrongObjectBall)]
-        [TestCase("9", new[] {"9"}, BallClass.Solids, ShotResultType.WrongObjectBall)]
-        [TestCase("1", new[] {"9"}, BallClass.Solids, ShotResultType.SunkOpponentsBall)]
-        [TestCase("9", new[] {"9"}, BallClass.Stripes, ShotResultType.LegalPot)]
-        [TestCase("9", new[] {"15"}, BallClass.Stripes, ShotResultType.LegalPot)]
-        [TestCase("9", new[] {"7"}, BallClass.Stripes, ShotResultType.SunkOpponentsBall)]
+        [TestCase("1", new[] {"1"}, BallClass.Solids, ShotResultType.LegalPot)]    //clean sink solid
+        [TestCase("1", new[] {"4"}, BallClass.Solids, ShotResultType.LegalPot)]    //combination sink solid
+        [TestCase("9", new string[]{}, BallClass.Solids, ShotResultType.WrongObjectBall)] //hit wrong object ball
+        [TestCase("9", new[] {"9"}, BallClass.Solids, ShotResultType.WrongObjectBall)] //hit & sink wrong object ball
+        [TestCase("1", new[] {"9"}, BallClass.Solids, ShotResultType.SunkOpponentsBall)] //combination sink wrong object ball
+        [TestCase("9", new[] {"9"}, BallClass.Stripes, ShotResultType.LegalPot)]    //clean sink stripes
+        [TestCase("9", new[] {"15"}, BallClass.Stripes, ShotResultType.LegalPot)]   //combination sink stripes
+        [TestCase("1", new string[]{}, BallClass.Stripes, ShotResultType.WrongObjectBall)] //hit wrong object ball
+        [TestCase("1", new[] {"1"}, BallClass.Stripes, ShotResultType.WrongObjectBall)] //hit & sink wrong object ball
+        [TestCase("9", new[] {"7"}, BallClass.Stripes, ShotResultType.SunkOpponentsBall)] //combination sink wrong object ball
         public void test_object_ball_rules(string objectBall, IEnumerable<string> ballsSunk, BallClass ballClass, 
             ShotResultType expected)
         {
-            var result = SetUpShotResult(objectBall, ballsSunk, ballClass, false);
+            var result = SetUpShotResult(objectBall, ballsSunk, shooting: ballClass, isBreak: false);
+            
+            Assert.AreEqual(result.Type, expected);
+        }
+
+        [Test]
+        [TestCase()]
+        public void test_turn_passing_rules(string objectBall, IEnumerable<string> ballsSunk, BallClass ballClass, 
+            ShotResultType expected)
+        {
+            var result = SetUpShotResult(objectBall, ballsSunk, shooting: ballClass, isBreak: false);
             
             Assert.AreEqual(result.Type, expected);
         }
         
-        private ShotResult SetUpShotResult(string objectBall, IEnumerable<string> sunk, BallClass shooting = BallClass.Neither, bool isBreak = true)
+        private ShotResult SetUpShotResult(string objectBall, IEnumerable<string> sunk, EightBallRackTestWrapper rack = null, 
+                                           BallClass shooting = BallClass.Neither, bool isBreak = true)
         {
-            var rack = new EightBallRackTestWrapper();
+            var balls = rack ?? new EightBallRackTestWrapper();
             if (!isBreak)
-                rack.SinkBall("2", true);
+                balls.SinkBall("2", true);
             var team1 = SetUpTeam(1);
             var team2 = SetUpTeam(1);
             team1.Shooting = shooting;
             team2.Shooting = shooting == BallClass.Neither ? BallClass.Neither : team1.Opposite;
             var shotResultFactory = new ShotResultFactory();
-            return shotResultFactory.Create(Game.EightBallPool, team1, rack, objectBall, sunk);
+            return shotResultFactory.Create(Game.EightBallPool, team1, balls, objectBall, sunk);
         }
 
         private Team SetUpTeam(int numberOfPlayers)
