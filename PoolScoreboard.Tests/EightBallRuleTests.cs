@@ -86,7 +86,7 @@ namespace PoolScoreboard.Tests
             }
             return new EightBallPoolTeam(players)
             {
-                Shooting = shooting
+                Class = shooting
             };
         }
     }

@@ -32,7 +32,7 @@ namespace PoolScoreboard.Tests
         public void test_that_opposite_calculates_correctly(BallClass shooting, BallClass opposite)
         {
             var team = SetupTeam(1);
-            team.Shooting = shooting;
+            team.Class = shooting;
             Assert.AreEqual(team.Opposite, opposite);
         }
         

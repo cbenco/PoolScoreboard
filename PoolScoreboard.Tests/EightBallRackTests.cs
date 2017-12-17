@@ -18,7 +18,7 @@ namespace PoolScoreboard.Tests
         [Test]
         public void test_open_table_when_no_ball_sunk()
         {
-            var rack = new EightBallRackTestWrapper();
+            var rack = new EightBallRackTestWrapper(isBreak: true);
             
             Assert.IsTrue(rack.OpenTable);
         }
@@ -26,8 +26,7 @@ namespace PoolScoreboard.Tests
         [Test]
         public void test_open_table_when_ball_sunk()
         {
-            var rack = new EightBallRackTestWrapper();
-            rack.SinkBall("1", true);
+            var rack = new EightBallRackTestWrapper(isBreak: false);
             
             Assert.IsTrue(!rack.OpenTable);
         }
@@ -35,7 +34,7 @@ namespace PoolScoreboard.Tests
         [Test]
         public void test_open_table_when_ball_illegally_sunk()
         {
-            var rack = new EightBallRackTestWrapper();
+            var rack = new EightBallRackTestWrapper(isBreak: true);
             rack.SinkBall("1", false);
             
             Assert.IsTrue(rack.OpenTable);
@@ -45,7 +44,6 @@ namespace PoolScoreboard.Tests
         public void test_hasnocolours_calculates_correctly()
         {
             var rack = new EightBallRackTestWrapper();
-            
         }
     }
 }

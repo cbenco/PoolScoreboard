@@ -20,7 +20,7 @@ namespace PoolScoreboard.Interface
                 Name = name
             }))
             {
-                Shooting = BallClass.Neither
+                Class = BallClass.Neither
             };
         }
 
@@ -28,7 +28,7 @@ namespace PoolScoreboard.Interface
         {
             return new EightBallPoolTeam(players)
             {
-                Shooting = BallClass.Neither
+                Class = BallClass.Neither
             };
         }
 

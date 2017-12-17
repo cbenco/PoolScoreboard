@@ -46,7 +46,7 @@ namespace PoolScoreboard.Application
             var teamNotShooting = GetTeamNotShooting();
             if (shotResult.FirstLegalPot)
             {
-                teamNotShooting.Shooting = CurrentShooter.Opposite;
+                teamNotShooting.Class = CurrentShooter.Opposite;
             }
             if (!shotResult.LegalPot)
                 //Cycle teams

@@ -10,7 +10,7 @@ namespace PoolScoreboard.Application
         bool Breaker { get; set; }
         int ShotCount { get; }
         IPlayer ThisShooter { get; }
-        BallClass Shooting { get; set; }
+        BallClass Class { get; set; }
         BallClass Opposite { get; }
     }
     
@@ -32,14 +32,14 @@ namespace PoolScoreboard.Application
             LastShooterIndex = firstShooter;
         }
         
-        public BallClass Shooting { get; set; }
+        public BallClass Class { get; set; }
 
         public BallClass Opposite
         {
             get
             {
-                if (Shooting != BallClass.Neither)
-                    return Shooting == BallClass.Solids ? BallClass.Stripes : BallClass.Solids;
+                if (Class != BallClass.Neither)
+                    return Class == BallClass.Solids ? BallClass.Stripes : BallClass.Solids;
                 return BallClass.Neither;
             }
         }

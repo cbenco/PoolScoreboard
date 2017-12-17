@@ -22,7 +22,7 @@ namespace PoolScoreboard.Tests
         {
             var team1 = SetUpTeam(1, 1, BallClass.Solids);
             var team2 = SetUpTeam(1, 2, BallClass.Stripes);
-            var rack = new EightBallRackTestWrapper();
+            var rack = new EightBallRackTestWrapper(true);
             if (isBreak) rack.SinkBall("1", true);
             return new Table(rack, team1, team2);
         }

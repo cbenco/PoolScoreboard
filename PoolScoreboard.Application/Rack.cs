@@ -78,8 +78,8 @@ namespace PoolScoreboard.Application
         
         public override bool HasAllColours => this.Count(b => b.Class == BallClass.Solids && b.OnTable) == 7 &&
                                      this.Count(b => b.Class == BallClass.Stripes && b.OnTable) == 7;
-        public override bool HasNoColours => this.Where(b => b.Class == BallClass.Solids).All(b => !b.OnTable) &&
-                                     this.Where(b => b.Class == BallClass.Stripes).All(b => !b.OnTable);
+        
+        public override bool HasNoColours => HasNo(BallClass.Solids) && HasNo(BallClass.Stripes);
         
         protected override bool LegalIdentifier(string identifier)
         {

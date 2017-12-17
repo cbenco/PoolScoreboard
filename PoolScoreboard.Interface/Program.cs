@@ -40,7 +40,7 @@ namespace PoolScoreboard.Interface
             while (!game.GameOver)
             {
                 Console.WriteLine($"{Table.CurrentShooter.ThisShooter.Name}'s turn, " +
-                                  $"shooting {Table.CurrentShooter.Shooting.ToString()}");
+                                  $"shooting {Table.CurrentShooter.Class.ToString()}");
                 Console.Write("Enter first ball hit or x to finish turn: ");
                 var objectBall = Console.ReadLine();
                 var sunk = new List<string>();

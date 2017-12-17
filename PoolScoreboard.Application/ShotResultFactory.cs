@@ -20,17 +20,19 @@ namespace PoolScoreboard.Application
             ShotResult result = null;
             if (game == Game.EightBallPool)
             {
-                result = new PoolShotResult();
-                result.ShootingTeam = team;
-                result.Shooter = team.ThisShooter;
-                result.ObjectBall = rack.Ball(objectBall);
-                result.BallsSunk = sunk.Select(rack.Ball).ToList();
-                result.Type = EightBallPoolRules.ValidateShot(rack, result, isBreak);
+                result = new PoolShotResult
+                {
+                    ShootingTeam = team,
+                    Shooter = team.ThisShooter,
+                    ObjectBall = rack.Ball(objectBall),
+                    BallsSunk = sunk.Select(rack.Ball).ToList()
+                };
+                result.Type = EightBallPoolRules.ValidateShot((EightBallPoolRack) rack, result);
                 rack.SinkBalls(sunk, result.LegalPot);
                 if (result.BallsSunk.Any() && result.LegalPot)
                 {
                     result.FirstLegalPot = true;
-                    team.Shooting = result.BallsSunk.First().Class;
+                    team.Class = result.BallsSunk.First().Class;
                 }
             }
             return result;
