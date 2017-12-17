@@ -48,6 +48,10 @@ namespace PoolScoreboard.Application
             {
                 teamNotShooting.Class = CurrentShooter.Opposite;
             }
+            if (_balls.HasNo(CurrentShooter.Class))
+            {
+                CurrentShooter.Class = BallClass.EightBall;
+            }
             if (!shotResult.LegalPot)
                 //Cycle teams
                 CurrentShooter = teamNotShooting;

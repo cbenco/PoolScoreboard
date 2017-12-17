@@ -45,7 +45,7 @@ namespace PoolScoreboard.Tests
             return new TeamTestWrapper(players);
         }
         
-        private class TeamTestWrapper : Team
+        private class TeamTestWrapper : EightBallPoolTeam
         {
             public TeamTestWrapper(IEnumerable<Player> players) : base(players) {}
             

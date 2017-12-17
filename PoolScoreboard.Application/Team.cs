@@ -20,7 +20,8 @@ namespace PoolScoreboard.Application
         public List<IPlayer> Players { get; set; }
         public bool Breaker { get; set; }
         public int ShotCount { get; protected set; } = 0;
-
+        public bool HasColours { get; set; }
+        
         public IPlayer ThisShooter => Players[LastShooterIndex];
         public IPlayer NextShooter => Players[LastShooterIndex++];
         
@@ -31,8 +32,18 @@ namespace PoolScoreboard.Application
             Players = players.ToList();
             LastShooterIndex = firstShooter;
         }
-        
-        public BallClass Class { get; set; }
+
+        private BallClass _class;
+        public BallClass Class
+        {
+            get => HasColours ? _class : BallClass.EightBall;
+            set
+            {
+                if (value == BallClass.EightBall)
+                    HasColours = false;
+                else _class = value;
+            }
+        }
 
         public BallClass Opposite
         {
@@ -60,8 +71,11 @@ namespace PoolScoreboard.Application
     
     public class EightBallPoolTeam : Team
     {
+        
         public EightBallPoolTeam(IEnumerable<IPlayer> players, int firstShooter = 0) :
             base(players, firstShooter)
-        { }
+        {
+            HasColours = true;
+        }
     }
 }

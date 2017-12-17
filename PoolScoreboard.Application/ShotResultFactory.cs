@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Schema;
 
@@ -35,6 +36,7 @@ namespace PoolScoreboard.Application
                     team.Class = result.BallsSunk.First().Class;
                 }
             }
+            else throw new NotImplementedException();
             return result;
         }
     }
