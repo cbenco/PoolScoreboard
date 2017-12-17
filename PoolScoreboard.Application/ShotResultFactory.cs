@@ -30,17 +30,13 @@ namespace PoolScoreboard.Application
                 };
                 result.Type = EightBallPoolRules.ValidateShot((EightBallPoolRack) rack, result);
                 rack.SinkBalls(sunk, result.LegalPot);
-                if (result.BallsSunk.Any() && result.LegalPot)
-                {
-                    result.FirstLegalPot = true;
-                    team.Class = result.BallsSunk.First().Class;
-                }
+                result.FirstLegalPot = result.BallsSunk.Any() && result.LegalPot;
             }
             else throw new NotImplementedException();
             return result;
         }
     }
-
+    
     public enum Game
     {
         EightBallPool

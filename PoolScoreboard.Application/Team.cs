@@ -44,7 +44,7 @@ namespace PoolScoreboard.Application
                 else _class = value;
             }
         }
-
+        
         public BallClass Opposite
         {
             get

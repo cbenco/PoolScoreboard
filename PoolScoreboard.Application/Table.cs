@@ -43,27 +43,30 @@ namespace PoolScoreboard.Application
             var shotResultFactory = new ShotResultFactory();
             var shotResult = shotResultFactory.Create(_game, CurrentShooter, 
                                                       _balls, objectBall, sunk);
-            var teamNotShooting = GetTeamNotShooting();
-            if (shotResult.FirstLegalPot)
+            ProcessShot(shotResult);
+            CueBall.OnTable = true;
+            
+            CurrentFrame.Shots.Add(shotResult);
+            return shotResult;
+        }
+        
+        private ITeam GetTeamNotShooting => CurrentShooter == Team1 ? Team2 : Team1;
+        
+        private void ProcessShot(ShotResult result)
+        {
+            var teamNotShooting = GetTeamNotShooting;
+            if (result.FirstLegalPot)
             {
+                CurrentShooter.Class = result.ObjectBall.Class;
                 teamNotShooting.Class = CurrentShooter.Opposite;
             }
             if (_balls.HasNo(CurrentShooter.Class))
             {
                 CurrentShooter.Class = BallClass.EightBall;
             }
-            if (!shotResult.LegalPot)
+            if (!result.LegalPot)
                 //Cycle teams
                 CurrentShooter = teamNotShooting;
-            
-            CueBall.OnTable = true;
-            CurrentFrame.Shots.Add(shotResult);
-            return shotResult;
-        }
-        
-        private ITeam GetTeamNotShooting()
-        {
-            return CurrentShooter == Team1 ? Team2 : Team1;
         }
 
         public override string ToString()
