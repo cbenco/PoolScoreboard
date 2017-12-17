@@ -24,7 +24,7 @@ namespace PoolScoreboard.Application
         public IPlayer ThisShooter => Players[LastShooterIndex];
         public IPlayer NextShooter => Players[LastShooterIndex++];
         
-        protected int LastShooterIndex = 0;
+        protected int LastShooterIndex;
         
         public Team(IEnumerable<IPlayer> players, int firstShooter = 0)
         {

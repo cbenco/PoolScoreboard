@@ -43,38 +43,30 @@ namespace PoolScoreboard.Tests
             Assert.AreEqual(result.Type, expected);
         }
 
-        [Test]
-        [TestCase()]
-        public void test_turn_passing_rules(string objectBall, IEnumerable<string> ballsSunk, BallClass ballClass, 
-            ShotResultType expected)
-        {
-            var result = SetUpShotResult(objectBall, ballsSunk, shooting: ballClass, isBreak: false);
-            
-            Assert.AreEqual(result.Type, expected);
-        }
-        
         private ShotResult SetUpShotResult(string objectBall, IEnumerable<string> sunk, EightBallRackTestWrapper rack = null, 
-                                           BallClass shooting = BallClass.Neither, bool isBreak = true)
+                                           ITeam team1 = null, ITeam team2 = null, BallClass shooting = BallClass.Neither, 
+                                           bool isBreak = true)
         {
             var balls = rack ?? new EightBallRackTestWrapper();
             if (!isBreak)
                 balls.SinkBall("2", true);
-            var team1 = SetUpTeam(1);
-            var team2 = SetUpTeam(1);
-            team1.Shooting = shooting;
-            team2.Shooting = shooting == BallClass.Neither ? BallClass.Neither : team1.Opposite;
+            var firstTeam = team1 ?? SetUpTeam(1, shooting);
+            var secondTeam = team2 ?? SetUpTeam(1, shooting);
             var shotResultFactory = new ShotResultFactory();
-            return shotResultFactory.Create(Game.EightBallPool, team1, balls, objectBall, sunk);
+            return shotResultFactory.Create(Game.EightBallPool, firstTeam, balls, objectBall, sunk);
         }
 
-        private Team SetUpTeam(int numberOfPlayers)
+        private Team SetUpTeam(int numberOfPlayers, BallClass shooting = BallClass.Neither)
         {
             List<Player> players = new List<Player>();
             for (int i = 0; i < numberOfPlayers; i++)
             {
                 players.Add(new Player());
             }
-            return new EightBallPoolTeam(players);
+            return new EightBallPoolTeam(players)
+            {
+                Shooting = shooting
+            };
         }
     }
 }

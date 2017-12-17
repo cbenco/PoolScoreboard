@@ -46,6 +46,7 @@
     <Compile Include="EightBallRackTests.cs" />
     <Compile Include="EightBallRackTestWrapper.cs" />
     <Compile Include="EightBallRuleTests.cs" />
+    <Compile Include="TableTests.cs" />
     <Compile Include="TeamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
