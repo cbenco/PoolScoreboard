@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E9B653B0-A8CB-4FD4-AD2D-EE164C727FDF}</ProjectGuid>
+    <ProjectGuid>{ACBFC5CB-D5D1-4FA4-8C0D-2C485B9C461D}</ProjectGuid>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PoolScoreboard.Tests</RootNamespace>
-    <AssemblyName>PoolScoreboard.Tests</AssemblyName>
+    <RootNamespace>PoolScoreboard.Controller</RootNamespace>
+    <AssemblyName>PoolScoreboard.Controller</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,25 +37,14 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
-      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BallTests.cs" />
-    <Compile Include="EightBallRackTests.cs" />
-    <Compile Include="EightBallRuleTests.cs" />
-    <Compile Include="TeamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PoolScoreboard.Application\PoolScoreboard.Application.csproj">
-      <Project>{10729F02-E09A-4EAB-AF03-9DE7BAE45C5A}</Project>
+      <Project>{10729f02-e09a-4eab-af03-9de7bae45c5a}</Project>
       <Name>PoolScoreboard.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoolScoreboard.Common\PoolScoreboard.Common.csproj">
-      <Project>{62F7584B-810B-4B5F-AD6B-EC16466464D9}</Project>
-      <Name>PoolScoreboard.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

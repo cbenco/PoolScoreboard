@@ -40,12 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
-    <Compile Include="LegalityStrategy.cs" />
+    <Compile Include="Frame.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rack.cs" />
     <Compile Include="Rules.cs" />
     <Compile Include="ShotResult.cs" />
+    <Compile Include="ShotResultFactory.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Team.cs" />
   </ItemGroup>

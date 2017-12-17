@@ -13,7 +13,7 @@ namespace PoolScoreboard.Application
         bool LegallySunk { get; set; }
         BallClass Class { get; }
 
-        void Sink();
+        void Sink(bool legal);
     }
     
     public abstract class Ball : IBall
@@ -24,23 +24,24 @@ namespace PoolScoreboard.Application
         public virtual bool LegallySunk { get; set; }
         public virtual BallClass Class { get; }
 
-        public virtual void Sink()
+        public virtual void Sink(bool legal)
         {
             SunkBy = Table.CurrentShooter;
             OnTable = false;
-            LegallySunk = true;
+            LegallySunk = legal;
         }
     }
     
     public class CueBall : Ball
     {
         public override string Identifier => Constants.BallNames.CueBall;
+        public override BallClass Class => BallClass.Neither;
         public override bool LegallySunk { get; set; } = false;
     }
     
     public sealed class PoolBall : Ball
     {
-        private int Number => int.Parse(Identifier);
+        public int Number => int.Parse(Identifier);
         public override BallClass Class
         {
             get
@@ -59,10 +60,18 @@ namespace PoolScoreboard.Application
             LegallySunk = false;
             SunkBy = null;
         }
+        
+        public override void Sink(bool legal)
+        {
+            SunkBy = Table.CurrentShooter;
+            OnTable = false;
+            LegallySunk = legal;
+        }
     }
     
     public enum BallClass
     {
+        Neither,
         Solids,
         Stripes,
         EightBall,

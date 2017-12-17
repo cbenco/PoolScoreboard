@@ -5,23 +5,27 @@ namespace PoolScoreboard.Application
 {
     public interface ITeam
     {
+        int Id { get; set; }
         List<IPlayer> Players { get; set; }
         bool Breaker { get; set; }
         int ShotCount { get; }
-        
-        ShotResult TakeShot(List<IBall> sunk);
+        IPlayer ThisShooter { get; }
+        BallClass Shooting { get; set; }
+        BallClass Opposite { get; }
+        ShotResult TakeShot(IEnumerable<IBall> sunk);
     }
     
     public abstract class Team : ITeam
     {
+        public int Id { get; set; }
         public List<IPlayer> Players { get; set; }
         public bool Breaker { get; set; }
-        public int ShotCount { get; private set; } = 0;
+        public int ShotCount { get; protected set; } = 0;
 
         public IPlayer ThisShooter => Players[LastShooterIndex];
         public IPlayer NextShooter => Players[LastShooterIndex++];
         
-        protected int LastShooterIndex;
+        protected int LastShooterIndex = 0;
         
         protected Team(IEnumerable<IPlayer> players, int firstShooter = 0)
         {
@@ -29,12 +33,12 @@ namespace PoolScoreboard.Application
             LastShooterIndex = firstShooter;
         }
         
-        public ShotResult TakeShot(List<IBall> sunk)
+        public virtual ShotResult TakeShot(IEnumerable<IBall> sunk)
         {
             ShotCount++;
             var result = new ShotResult
             {
-                ShotBy = this,
+                ShootingTeam = this,
                 Shooter = ThisShooter,
                 BallsSunk = sunk
             };
@@ -42,10 +46,20 @@ namespace PoolScoreboard.Application
         }
         
         public BallClass Shooting { get; set; }
+        public BallClass Opposite => 
+            Shooting == BallClass.Solids ? BallClass.Stripes : BallClass.Solids;
         
         protected void UpdateLastShooterIndex()
         {
             if (++LastShooterIndex >= Players.Count) LastShooterIndex = 0;
+        }
+        
+        public override string ToString()
+        {
+            var result = $"TEAM {Id}: \n";
+            Players.ForEach(p => result += p.ToString() + "\n");
+            result += $"Breaking: {Breaker}\n";
+            return result;
         }
     }
     
@@ -53,6 +67,19 @@ namespace PoolScoreboard.Application
     {
         public EightBallPoolTeam(IEnumerable<IPlayer> players, int firstShooter = 0) :
             base(players, firstShooter)
-        { }
+        {
+        }
+        
+        public override ShotResult TakeShot(IEnumerable<IBall> sunk)
+        {
+            ShotCount++;
+            var result = new PoolShotResult()
+            {
+                ShootingTeam = this,
+                Shooter = ThisShooter,
+                BallsSunk = sunk
+            };
+            return result;
+        }
     }
 }

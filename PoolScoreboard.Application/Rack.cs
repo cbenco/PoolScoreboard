@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
 using PoolScoreboard.Common;
 
@@ -9,26 +10,38 @@ namespace PoolScoreboard.Application
 {
     public interface IRack
     {
-        void SinkBall(string identifier);
+        void SinkBalls(IEnumerable<string> identifiers, bool legal);
+        IBall Ball(string identifier);
+        bool IsBreak { get; }
+        bool GameOver { get; }
     }
     
-    public abstract class Rack<T> : List<IBall>, IRack
+    public abstract class Rack<T> : List<T>, IRack where T : IBall
     {
-        private IBall Ball(string identifier)
+        public IBall Ball(string identifier)
         {
-            if (LegalIdentifier(identifier))
+            if (!LegalIdentifier(identifier))
             {
                 throw new ArgumentException("Invalid ball identifier.");
             }
+            if (identifier == Constants.BallNames.CueBall)
+                return Table.cueBall;
             
             return this.FirstOrDefault(b => b.Identifier == identifier);
         }
-        
-        public virtual void SinkBall(string identifier)
+        public virtual void SinkBalls(IEnumerable<string> identifiers, bool legal)
         {
-            Ball(identifier).Sink();
+            foreach(var identifier in identifiers)
+                SinkBall(identifier, legal);
         }
         
+        private void SinkBall(string identifier, bool legal)
+        {
+            Ball(identifier).Sink(legal);
+        }
+
+        public virtual bool IsBreak { get; }
+        public virtual bool GameOver { get; }
         protected abstract bool LegalIdentifier(string identifier);
     }
     
@@ -41,14 +54,19 @@ namespace PoolScoreboard.Application
                 Add(new PoolBall(i));
             }
         }
+
+        public override bool IsBreak => this.Count(b => b.OnTable) == 15;
+        public override bool GameOver => !this.First(b => b.Number == 8).OnTable;
         
         public bool OpenTable => this.All(b => b.OnTable || !b.LegallySunk);
         
         protected override bool LegalIdentifier(string identifier)
         {
-            return !int.TryParse(identifier, out var result) || 
-                   result < 0 || 
-                   result > Constants.NumberOfBalls.EightBall;
+            return
+                identifier == Constants.BallNames.CueBall ||
+                int.TryParse(identifier, out var result) ||
+                result > 0 ||
+                result < Constants.NumberOfBalls.EightBall;
         }
     }
 }

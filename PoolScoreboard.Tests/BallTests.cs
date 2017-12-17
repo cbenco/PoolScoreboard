@@ -12,19 +12,10 @@ namespace PoolScoreboard.Tests
             #region Ball creation
             [Test]
             [TestCase(1, BallClass.Solids)]
-            [TestCase(2, BallClass.Solids)]
-            [TestCase(3, BallClass.Solids)]
-            [TestCase(4, BallClass.Solids)]
-            [TestCase(5, BallClass.Solids)]
-            [TestCase(6, BallClass.Solids)]
             [TestCase(7, BallClass.Solids)]
             [TestCase(8, BallClass.EightBall)]
             [TestCase(9, BallClass.Stripes)]
             [TestCase(10, BallClass.Stripes)]
-            [TestCase(11, BallClass.Stripes)]
-            [TestCase(12, BallClass.Stripes)]
-            [TestCase(13, BallClass.Stripes)]
-            [TestCase(14, BallClass.Stripes)]
             [TestCase(15, BallClass.Stripes)]
             public void test_that_new_pool_ball_returns_correct_ballclass(int number, BallClass expected)
             {

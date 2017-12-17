@@ -20,14 +20,14 @@ namespace PoolScoreboard.Tests
         {
             var rack = new EightBallRackTestWrapper();
             
-            Assert.IsTrue(!rack.OpenTable);
+            Assert.IsTrue(rack.OpenTable);
         }
         
         [Test]
         public void test_open_table_when_ball_sunk()
         {
             var rack = new EightBallRackTestWrapper();
-            rack.SinkBall("1");
+            rack.SinkBall("1", true);
             
             Assert.IsTrue(!rack.OpenTable);
         }
