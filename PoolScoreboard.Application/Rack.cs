@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.X509Certificates;
 using PoolScoreboard.Common;
 
 namespace PoolScoreboard.Application
@@ -16,6 +13,8 @@ namespace PoolScoreboard.Application
     {
         void SinkBalls(IEnumerable<string> identifiers, bool legal);
         IBall Ball(string identifier);
+        IEnumerable<string> GetSinkableBalls { get; }
+        IEnumerable<string> GetSunkBalls { get; }
         bool IsBreak { get; }
         bool GameOver { get; }
         bool HasNoColours { get; }
@@ -57,6 +56,9 @@ namespace PoolScoreboard.Application
                 return false;
             return this.Where(b => b.Class == colour).All(b => !b.OnTable);
         }
+
+        public IEnumerable<string> GetSinkableBalls => this.Where(b => b.OnTable).Select(b => b.Identifier);
+        public IEnumerable<string> GetSunkBalls => this.Where(b => !b.OnTable).Select(b => b.Identifier);
         
         protected abstract bool LegalIdentifier(string identifier);
     }

@@ -103,6 +103,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Config\PoolScoreboardWebApiConfig.cs" />
     <Compile Include="Controllers\ScoreboardController.cs" />
+    <Compile Include="Factories\IRackResponseFactory.cs" />
+    <Compile Include="Factories\ITableResponseFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -125,12 +127,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PoolScoreboard.Application\PoolScoreboard.Application.csproj">
       <Project>{10729f02-e09a-4eab-af03-9de7bae45c5a}</Project>
       <Name>PoolScoreboard.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PoolScoreboard.Common\PoolScoreboard.Common.csproj">
+      <Project>{62f7584b-810b-4b5f-ad6b-ec16466464d9}</Project>
+      <Name>PoolScoreboard.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
