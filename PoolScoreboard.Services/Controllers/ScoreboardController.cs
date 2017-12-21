@@ -12,11 +12,6 @@ namespace PoolScoreboard.Services.Controllers
         private readonly ITableFactory _tableFactory = new TableFactory();
         private readonly ITableResponseFactory _tableResponseFactory = new TableResponseFactory();
         
-        public string Get()
-        {
-            return "Hello World";
-        }
-
         public TableResponse CreateGame(Game gameType, string firstTeamPlayerNames, string secondTeamPlayerNames)
         {
             var table = _tableFactory.Create(gameType, 

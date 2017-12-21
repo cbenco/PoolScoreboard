@@ -5,6 +5,8 @@ namespace PoolScoreboard.Application
 {
     public class ShotResult
     {
+        public int Id { get; set; }
+        
         public ITeam ShootingTeam { get; set; }
         public IPlayer Shooter { get; set; }
         public IBall ObjectBall { get; set; }
@@ -12,7 +14,7 @@ namespace PoolScoreboard.Application
         public bool LegalPot => Type == ShotResultType.LegalPot || Type == ShotResultType.Win;
         public bool FirstLegalPot { get; set; }
         public ShotResultType Type { get; set; }
-
+        
         public override string ToString()
         {
             var result = "";

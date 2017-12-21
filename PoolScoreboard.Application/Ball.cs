@@ -51,11 +51,14 @@ namespace PoolScoreboard.Application
             }
         }
         
-        public PoolBall(int number)
+        public PoolBall(string identifier)
         {
-            if (number < 1 || number > 15) throw new ArgumentException("Ball number is out of range.");
+            if (int.TryParse(identifier, out var number) && number < 1 || number > 15) 
+                throw new ArgumentException("Ball number is out of range.");
+            if (identifier != Table.CueBall.Identifier)
+                throw new ArgumentException("Invalid ball identifier.");
             
-            Identifier = number.ToString();
+            Identifier = identifier;
             OnTable = true;
             LegallySunk = false;
             SunkBy = null;

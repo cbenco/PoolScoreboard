@@ -4,6 +4,8 @@ using System.Dynamic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
+using PoolScoreboard.Application.DataAccess.Shot;
+using PoolScoreboard.Application.Interfaces;
 using PoolScoreboard.Common;
 
 namespace PoolScoreboard.Application
@@ -14,7 +16,10 @@ namespace PoolScoreboard.Application
         public static ITeam CurrentShooter { get; set; }
         public ITeam Team1 { get; set; }
         public ITeam Team2 { get; set; }
-
+        
+        private IShotResultFactory _shotResultFactory = new ShotResultFactory();
+        private IShotResultRepository _shotResultRepository = new ShotResultRepository();
+        
         public Frame CurrentFrame;
 
         public IRack Rack { get; }
@@ -37,10 +42,11 @@ namespace PoolScoreboard.Application
         
         public ShotResult PlayShot(string objectBall, IEnumerable<string> sunk)
         {
-            var shotResultFactory = new ShotResultFactory();
-            var shotResult = shotResultFactory.Create(_game, CurrentShooter, 
+            var shotResult = _shotResultFactory.Create(_game, CurrentShooter, 
                                                       Rack, objectBall, sunk);
             ProcessShot(shotResult);
+            _shotResultRepository.Save(shotResult);
+            
             CueBall.OnTable = true;
             
             CurrentFrame.Shots.Add(shotResult);

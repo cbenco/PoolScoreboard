@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Schema;
 
 namespace PoolScoreboard.Application
 {
     public interface IShotResultFactory
     {
-        
+        ShotResult Create(Game game, ITeam team, IRack rack, string objectBall, IEnumerable<string> sunk);
     }
     
     public class ShotResultFactory : IShotResultFactory

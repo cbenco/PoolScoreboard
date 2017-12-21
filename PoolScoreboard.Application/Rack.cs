@@ -69,7 +69,7 @@ namespace PoolScoreboard.Application
         {
             for (var i = 1; i <= Constants.NumberOfBalls.EightBall; i++)
             {
-                Add(new PoolBall(i));
+                Add(new PoolBall(i.ToString()));
             }
         }
 
