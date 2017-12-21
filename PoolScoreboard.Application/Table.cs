@@ -12,37 +12,34 @@ namespace PoolScoreboard.Application
     {
         private Game _game = Game.EightBallPool;
         public static ITeam CurrentShooter { get; set; }
-        private static ITeam Team1 { get; set; }
-        private static ITeam Team2 { get; set; }
+        public ITeam Team1 { get; set; }
+        public ITeam Team2 { get; set; }
 
         public Frame CurrentFrame;
-        public List<Frame> Frames { get; set; }
 
-        private readonly IRack _balls;
+        public IRack Rack { get; }
         public static readonly IBall CueBall = new CueBall();
 
-        public bool GameOver => _balls.GameOver;
+        public bool GameOver => Rack.GameOver;
         
-        public Table(IRack balls, ITeam team1, ITeam team2)
+        public Table(IRack rack, ITeam team1, ITeam team2)
         {
-            _balls = balls;
+            Rack = rack;
             Team1 = team1;
             Team2 = team2;
 
             CurrentShooter = team1;
-            Frames = new List<Frame>();
             CurrentFrame = new Frame
             {
                 Players = Team1.Players.Union(Team2.Players).ToList()
             };
-            Frames.Add(CurrentFrame);
         }
         
         public ShotResult PlayShot(string objectBall, IEnumerable<string> sunk)
         {
             var shotResultFactory = new ShotResultFactory();
             var shotResult = shotResultFactory.Create(_game, CurrentShooter, 
-                                                      _balls, objectBall, sunk);
+                                                      Rack, objectBall, sunk);
             ProcessShot(shotResult);
             CueBall.OnTable = true;
             
@@ -60,7 +57,7 @@ namespace PoolScoreboard.Application
                 CurrentShooter.Class = result.ObjectBall.Class;
                 teamNotShooting.Class = CurrentShooter.Opposite;
             }
-            if (_balls.HasNo(CurrentShooter.Class))
+            if (Rack.HasNo(CurrentShooter.Class))
             {
                 CurrentShooter.Class = BallClass.EightBall;
             }

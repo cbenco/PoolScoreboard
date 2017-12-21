@@ -23,7 +23,7 @@ namespace PoolScoreboard.Application.Interfaces
                     throw new NotImplementedException();
             }
         }
-
+        
         private Table EightBallTable(IEnumerable<string> team1, IEnumerable<string> team2)
         {
             var rack = new EightBallPoolRack();

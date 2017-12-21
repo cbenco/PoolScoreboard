@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using PoolScoreboard.Application;
 using PoolScoreboard.Application.Interfaces;
+using PoolScoreboard.Services.Models;
 
 namespace PoolScoreboard.Services.Controllers
 {
@@ -17,9 +18,18 @@ namespace PoolScoreboard.Services.Controllers
             return "Hello World";
         }
 
-        public Table CreateGame(Game gameType, string firstTeamPlayerNames, string secondTeamPlayerNames)
+        public TableResponse CreateGame(Game gameType, string firstTeamPlayerNames, string secondTeamPlayerNames)
         {
-            return _tableFactory.Create(gameType, firstTeamPlayerNames.Split(','), secondTeamPlayerNames.Split(','));
+            var table = _tableFactory.Create(gameType, 
+                                        GetTeamNameStrings(firstTeamPlayerNames), 
+                                        GetTeamNameStrings(secondTeamPlayerNames));
+
+            return new TableResponse(table);
+        }
+        
+        private IEnumerable<string> GetTeamNameStrings(string playerNames)
+        {
+            return playerNames.Split(',');
         }
     }
 }
