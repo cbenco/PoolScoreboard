@@ -19,7 +19,7 @@ namespace PoolScoreboard.Tests
             [TestCase(15, BallClass.Stripes)]
             public void test_that_new_pool_ball_returns_correct_ballclass(int number, BallClass expected)
             {
-                var ball = new PoolBall(number);
+                var ball = new PoolBall(number.ToString());
                 Assert.That(ball.Class == expected);
             }
             
@@ -32,7 +32,7 @@ namespace PoolScoreboard.Tests
             {
                 Assert.Throws<ArgumentException>(() =>
                 {
-                    var ball = new PoolBall(number);
+                    var ball = new PoolBall(number.ToString());
                 });
             }
             #endregion

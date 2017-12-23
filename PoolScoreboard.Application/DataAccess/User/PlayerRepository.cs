@@ -19,6 +19,7 @@ namespace PoolScoreboard.Application.DataAccess.User
             {
                 
             }
+            return new Player();
         }
         
         public List<Player> List(Expression<Func<Player, bool>> whereCondition)
@@ -37,6 +38,11 @@ namespace PoolScoreboard.Application.DataAccess.User
         }
         
         public void Delete(Player player)
+        {
+            Delete(player.Id);
+        }
+
+        public void Delete(int id)
         {
             
         }

@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Ball.cs" />
     <Compile Include="DataAccess\AppContext\ScoreboardDatabase.cs" />
+    <Compile Include="DataAccess\Team\TeamRepository.cs" />
     <Compile Include="DataAccess\User\PlayerDto.cs" />
     <Compile Include="DataAccess\User\PlayerRepository.cs" />
     <Compile Include="DataAccess\Shot\ShotResultDto.cs" />

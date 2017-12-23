@@ -23,7 +23,7 @@ namespace PoolScoreboard.Application
         public virtual ITeam SunkBy { get; set; }
         public virtual bool LegallySunk { get; set; }
         public virtual BallClass Class { get; }
-
+        
         public virtual void Sink(bool legal)
         {
             SunkBy = Table.CurrentShooter;
@@ -51,17 +51,27 @@ namespace PoolScoreboard.Application
             }
         }
         
-        public PoolBall(string identifier)
+        public PoolBall(string identifier, bool legallySunk = false)
         {
-            if (int.TryParse(identifier, out var number) && number < 1 || number > 15) 
+            if (IsLegalIdentifier(identifier, out var number) && number < 1 || number > 15) 
                 throw new ArgumentException("Ball number is out of range.");
-            if (identifier != Table.CueBall.Identifier)
+            if (!IsLegalIdentifier(identifier) && identifier != Table.CueBall.Identifier)
                 throw new ArgumentException("Invalid ball identifier.");
             
             Identifier = identifier;
             OnTable = true;
-            LegallySunk = false;
+            LegallySunk = legallySunk;
             SunkBy = null;
+        }
+
+        private bool IsLegalIdentifier(string identifier, out int number)
+        {
+            return int.TryParse(identifier, out number);
+        }
+
+        private bool IsLegalIdentifier(string identifier)
+        {
+            return int.TryParse(identifier, out var number);
         }
         
         public override void Sink(bool legal)
