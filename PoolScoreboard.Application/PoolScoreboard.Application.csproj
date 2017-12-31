@@ -52,6 +52,7 @@
       <HintPath>..\packages\Npgsql.3.1.0\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -72,8 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="DataAccess\AppContext\EntityDto.cs" />
+    <Compile Include="DataAccess\AppContext\EntityDtoFactory.cs" />
     <Compile Include="DataAccess\AppContext\ScoreboardDatabase.cs" />
-    <Compile Include="DataAccess\Table\TableRepository.cs" />
+    <Compile Include="DataAccess\Match\FrameDto.cs" />
+    <Compile Include="DataAccess\Match\FrameRepository.cs" />
+    <Compile Include="DataAccess\Team\TeamDto.cs" />
     <Compile Include="DataAccess\Team\TeamRepository.cs" />
     <Compile Include="DataAccess\User\PlayerDto.cs" />
     <Compile Include="DataAccess\User\PlayerRepository.cs" />
@@ -83,6 +88,7 @@
     <Compile Include="Interfaces\IPlayerFactory.cs" />
     <Compile Include="Interfaces\IRackFactory.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\ISaveable.cs" />
     <Compile Include="Interfaces\IShotResultService.cs" />
     <Compile Include="Interfaces\ITableFactory.cs" />
     <Compile Include="Interfaces\ITableService.cs" />

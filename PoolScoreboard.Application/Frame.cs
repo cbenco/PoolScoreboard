@@ -1,25 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application
 {
-    public class Frame
+    public class Frame : ISaveable
     {
+        public int? Id { get; set; }
+        
         public DateTime Start { get; set; }
         
-        public ITeam Winner { get; set; }
-        public ITeam Loser { get; set; }
+        public ITeam Team1 { get; set; }
+        public ITeam Team2 { get; set; }
         
         private List<ShotResult> _shots;
         public List<ShotResult> Shots => _shots ?? (_shots = new List<ShotResult>());
-        
-        private List<IPlayer> _players;
-        public List<IPlayer> Players
-        {
-            get => _players ?? (_players = new List<IPlayer>());
-            set => _players = value;
-        }
         
         private List<IBall> _sinkableBalls;
         public List<IBall> Sinkable

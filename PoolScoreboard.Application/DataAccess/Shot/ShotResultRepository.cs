@@ -18,7 +18,6 @@ namespace PoolScoreboard.Application.DataAccess.Shot
     public class ShotResultRepository : IShotResultRepository
     {
         private readonly IPlayerRepository _playerRepository = new PlayerRepository();
-        private readonly IEightBallTeamRepository _eightBallTeamRepository = new EightBallTeamRepository();
         
         public ShotResult Fetch(int id)
         {

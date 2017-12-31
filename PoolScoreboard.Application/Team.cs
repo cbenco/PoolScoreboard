@@ -5,8 +5,10 @@ namespace PoolScoreboard.Application
 {
     public interface ITeam
     {
-        int Id { get; set; }
+        int? Id { get; set; }
+        Frame Frame { get; set; }
         List<IPlayer> Players { get; set; }
+        string PlayersCsv { get; }
         bool Breaker { get; set; }
         int ShotCount { get; }
         IPlayer ThisShooter { get; }
@@ -16,11 +18,23 @@ namespace PoolScoreboard.Application
     
     public abstract class Team : ITeam
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public List<IPlayer> Players { get; set; }
         public bool Breaker { get; set; }
         public int ShotCount { get; protected set; } = 0;
         public bool HasColours { get; set; }
+        public Frame Frame { get; set; }
+
+        public string PlayersCsv
+        {
+            get
+            {
+                var s = Players[0].Id.ToString();
+                for (var i = 1; i < Players.Count; i++)
+                    s += "," + Players[i].Id;
+                return s;
+            }
+        }
         
         public IPlayer ThisShooter => Players[LastShooterIndex];
         public IPlayer NextShooter => Players[LastShooterIndex++];
@@ -71,7 +85,6 @@ namespace PoolScoreboard.Application
     
     public class EightBallPoolTeam : Team
     {
-        
         public EightBallPoolTeam(IEnumerable<IPlayer> players, int firstShooter = 0) :
             base(players, firstShooter)
         {

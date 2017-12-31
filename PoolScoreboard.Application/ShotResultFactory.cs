@@ -25,7 +25,8 @@ namespace PoolScoreboard.Application
                     ShootingTeam = team,
                     Shooter = team.ThisShooter,
                     ObjectBall = rack.Ball(objectBall),
-                    BallsSunk = sunk.Select(rack.Ball).ToList()
+                    BallsSunk = sunk.Select(rack.Ball).ToList(),
+                    Frame = team.Frame
                 };
                 result.Type = EightBallPoolRules.ValidateShot((EightBallPoolRack) rack, result);
                 rack.SinkBalls(sunk, result.LegalPot);

@@ -4,7 +4,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
+using PoolScoreboard.Application.DataAccess.Match;
 using PoolScoreboard.Application.DataAccess.Shot;
+using PoolScoreboard.Application.DataAccess.Team;
 using PoolScoreboard.Application.Interfaces;
 using PoolScoreboard.Common;
 
@@ -18,6 +20,8 @@ namespace PoolScoreboard.Application
         public ITeam Team2 { get; }
         
         private IShotResultFactory _shotResultFactory = new ShotResultFactory();
+        private IRepository<Frame> _frameRepository = new FrameRepository();
+        private readonly ITeamRepository _teamRepository = new TeamRepository();
         
         public Frame CurrentFrame;
         
@@ -33,12 +37,24 @@ namespace PoolScoreboard.Application
             Team2 = team2;
 
             CurrentShooter = team1;
+
             CurrentFrame = new Frame
             {
-                Players = Team1.Players.Union(Team2.Players).ToList()
+                Team1 = team1,
+                Team2 = team2
             };
+            SaveCurrentFrame();
         }
-        
+
+        private void SaveCurrentFrame()
+        {
+            _frameRepository.Save(CurrentFrame);
+            CurrentFrame.Team1.Frame = CurrentFrame;
+            CurrentFrame.Team2.Frame = CurrentFrame;
+            _teamRepository.Save(CurrentFrame.Team1);
+            _teamRepository.Save(CurrentFrame.Team2);
+        }
+
         public ShotResult PlayShot(string objectBall, IEnumerable<string> sunk)
         {
             var shotResult = _shotResultFactory.Create(_game, CurrentShooter, 
@@ -48,6 +64,7 @@ namespace PoolScoreboard.Application
             CueBall.OnTable = true;
             
             CurrentFrame.Shots.Add(shotResult);
+            SaveCurrentFrame();
             return shotResult;
         }
         

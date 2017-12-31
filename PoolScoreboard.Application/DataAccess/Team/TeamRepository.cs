@@ -1,45 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Linq.Expressions;
+using PoolScoreboard.Application.DataAccess.AppContext;
 using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application.DataAccess.Team
 {
-    public interface ITeamRepository<T> : IRepository<T> where T : ITeam
+    public interface ITeamRepository : IRepository<ITeam>
     {
         
     }
 
-    public interface IEightBallTeamRepository : ITeamRepository<EightBallPoolTeam>
+    public class TeamRepository : ITeamRepository
     {
+        public ITeam Fetch(int id)
+        {
+            return new EightBallPoolTeam(null);
+        }
         
-    }
-    
-    public class EightBallTeamRepository : IEightBallTeamRepository
-    {
-        public EightBallPoolTeam Fetch(int id)
+        public List<ITeam> List(Expression<Func<ITeam, bool>> whereCondition)
         {
-            return new EightBallPoolTeam(null, 0);
+            return new List<ITeam>();
         }
 
-        public EightBallPoolTeam Save(EightBallPoolTeam team)
+        public List<ITeam> List()
         {
-            return new EightBallPoolTeam(null, 0);
+            return new List<ITeam>();
         }
-
-        public List<EightBallPoolTeam> List(Expression<Func<EightBallPoolTeam, bool>> whereCondition)
+        
+        public ITeam Save(ITeam team)
         {
-            return new List<EightBallPoolTeam>();
+            var dto = new TeamDto(team);
+
+            using (var db = new ScoreboardDatabase())
+            {
+                if (!dto.Id.HasValue)
+                {
+                    db.Teams.Add(dto);
+                    team.Id = dto.Id;
+                }
+                SwapTeams(db.Teams, dto);
+                db.SaveChanges();
+            }
+            
+            return team;
         }
-
-        public List<EightBallPoolTeam> List()
+        
+        private void SwapTeams(DbSet<TeamDto> db, TeamDto shot)
         {
-            return new List<EightBallPoolTeam>();
+            var resultFromDb = GetById(db, shot.Id ?? 0);
+            if (shot.Id.HasValue && shot.Id.Value != 0)
+                db.Remove(resultFromDb);
+            db.Add(shot);
         }
-
-        public void Delete(EightBallPoolTeam team)
+        
+        private TeamDto GetById(IQueryable<TeamDto> db, int id)
         {
-            Delete(team.Id);
+            return db.FirstOrDefault(result => result.Id == id);
+        }
+        
+        public void Delete(ITeam team)
+        {
+            if (team.Id.HasValue)
+                Delete(team.Id.Value);
         }
 
         public void Delete(int id)

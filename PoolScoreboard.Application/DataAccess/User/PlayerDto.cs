@@ -1,8 +1,14 @@
-﻿namespace PoolScoreboard.Application.DataAccess.User
+﻿using PoolScoreboard.Application.DataAccess.AppContext;
+
+namespace PoolScoreboard.Application.DataAccess.User
 {
-    public class PlayerDto
+    public class PlayerDto : EntityDto
     {
-        public int Id { get; set; }
-        public int TeamId { get; set; }
+        public string Name { get; set; }
+
+        public PlayerDto(IPlayer player)
+        {
+            Name = player.Name;
+        }
     }
 }

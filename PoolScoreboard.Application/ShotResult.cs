@@ -7,6 +7,7 @@ namespace PoolScoreboard.Application
     {
         public int? Id { get; set; }
         
+        public Frame Frame { get; set; }
         public ITeam ShootingTeam { get; set; }
         public IPlayer Shooter { get; set; }
         public IBall ObjectBall { get; set; }
