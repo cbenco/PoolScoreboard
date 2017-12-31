@@ -16,12 +16,12 @@ namespace PoolScoreboard.Application
     {
         private Game _game = Game.EightBallPool;
         public static ITeam CurrentShooter { get; set; }
-        public ITeam Team1 { get; }
-        public ITeam Team2 { get; }
+        public ITeam Team1 { get; set; }
+        public ITeam Team2 { get; set; }
         
         private IShotResultFactory _shotResultFactory = new ShotResultFactory();
         private IRepository<Frame> _frameRepository = new FrameRepository();
-        private readonly ITeamRepository _teamRepository = new TeamRepository();
+        private readonly IPoolTeamRepository _poolTeamRepository = new PoolTeamRepository();
         
         public Frame CurrentFrame;
         
@@ -51,8 +51,8 @@ namespace PoolScoreboard.Application
             _frameRepository.Save(CurrentFrame);
             CurrentFrame.Team1.Frame = CurrentFrame;
             CurrentFrame.Team2.Frame = CurrentFrame;
-            _teamRepository.Save(CurrentFrame.Team1);
-            _teamRepository.Save(CurrentFrame.Team2);
+            /*Team1 = _poolTeamRepository.Save((EightBallPoolTeam)CurrentFrame.Team1);
+            Team2 = _poolTeamRepository.Save((EightBallPoolTeam)CurrentFrame.Team2);*/
         }
 
         public ShotResult PlayShot(string objectBall, IEnumerable<string> sunk)

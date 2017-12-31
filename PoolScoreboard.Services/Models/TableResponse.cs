@@ -19,6 +19,12 @@ namespace PoolScoreboard.Services.Models
             Rack = _rackResponseFactory.Create(Game.EightBallPool, table.Rack);
             Frame = new FrameResponse(table.CurrentFrame);
             CurrentShooter = new TeamResponse(Table.CurrentShooter);
+            WaitingShooter = new TeamResponse(GetWaitingShooter(table));
+        }
+
+        private ITeam GetWaitingShooter(Table table)
+        {
+            return table.Team1.Id == Table.CurrentShooter.Id ? table.Team2 : table.Team1;
         }
     }
 

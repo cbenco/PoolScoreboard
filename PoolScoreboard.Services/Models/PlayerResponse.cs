@@ -8,13 +8,11 @@ namespace PoolScoreboard.Services.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool CurrentShooter { get; set; }
 
         public PlayerResponse(IPlayer player, int currentShooterId)
         {
-            Id = player.Id;
+            Id = player.Id ?? 0;
             Name = player.Name;
-            CurrentShooter = Id == currentShooterId;
         }
 
         public static IEnumerable<PlayerResponse> CreateMany(IEnumerable<IPlayer> players, int currentShooterId)

@@ -24,7 +24,7 @@ namespace PoolScoreboard.Application.DataAccess.Shot
             FirstLegalPot = shotResult.FirstLegalPot;
             Id = shotResult.Id;
             ObjectBall = shotResult.ObjectBall.Identifier;
-            Shooter = shotResult.Shooter.Id;
+            Shooter = shotResult.Shooter.Id ?? 0;
             ShootingTeamId = shotResult.ShootingTeam?.Id;
             Type = shotResult.Type.ToString();
         }

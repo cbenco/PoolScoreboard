@@ -16,9 +16,9 @@ namespace PoolScoreboard.Application.DataAccess.AppContext
         public EntityDto Create(object argument)
         {
             var type = argument.GetType().Name;
-            if (type == "Team")
+            if (type == "Team" || type == "EightBallPoolTeam")
                 return new TeamDto((EightBallPoolTeam)argument);
-            if (type == "ShotResult")
+            if (type == "ShotResult" || type == "PoolShotResult")
                 return new ShotResultDto((ShotResult)argument);
             if (type == "Frame")
                 return new FrameDto((Frame)argument);

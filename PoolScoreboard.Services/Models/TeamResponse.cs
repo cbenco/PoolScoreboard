@@ -10,7 +10,8 @@ namespace PoolScoreboard.Services.Models
 
         public TeamResponse(ITeam team)
         {
-            Players = PlayerResponse.CreateMany(team.Players, team.ThisShooter.Id);
+            Players = PlayerResponse.CreateMany(team.Players, team.ThisShooter.Id.Value);
+            CurrentShooterId = team.ThisShooter.Id.Value;
         }
     }
 }

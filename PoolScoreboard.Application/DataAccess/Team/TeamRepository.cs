@@ -1,75 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Linq.Expressions;
 using PoolScoreboard.Application.DataAccess.AppContext;
+using PoolScoreboard.Application.DataAccess.User;
 using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application.DataAccess.Team
 {
-    public interface ITeamRepository : IRepository<ITeam>
+    public interface IPoolTeamRepository : IRepository<EightBallPoolTeam>
     {
         
     }
 
-    public class TeamRepository : ITeamRepository
+    public class PoolTeamRepository : Repository<EightBallPoolTeam, TeamDto>, IPoolTeamRepository
     {
-        public ITeam Fetch(int id)
-        {
-            return new EightBallPoolTeam(null);
-        }
-        
-        public List<ITeam> List(Expression<Func<ITeam, bool>> whereCondition)
-        {
-            return new List<ITeam>();
-        }
+        private readonly IPlayerRepository _playerRepository = new PlayerRepository();
 
-        public List<ITeam> List()
+        public override EightBallPoolTeam Save(EightBallPoolTeam item)
         {
-            return new List<ITeam>();
-        }
-        
-        public ITeam Save(ITeam team)
-        {
-            var dto = new TeamDto(team);
-
-            using (var db = new ScoreboardDatabase())
-            {
-                if (!dto.Id.HasValue)
-                {
-                    db.Teams.Add(dto);
-                    team.Id = dto.Id;
-                }
-                SwapTeams(db.Teams, dto);
-                db.SaveChanges();
-            }
-            
+            var team = base.Save(item);
+            SavePlayers(team.Players);
             return team;
         }
         
-        private void SwapTeams(DbSet<TeamDto> db, TeamDto shot)
+        protected override EightBallPoolTeam CastFromDto(TeamDto dto)
         {
-            var resultFromDb = GetById(db, shot.Id ?? 0);
-            if (shot.Id.HasValue && shot.Id.Value != 0)
-                db.Remove(resultFromDb);
-            db.Add(shot);
-        }
-        
-        private TeamDto GetById(IQueryable<TeamDto> db, int id)
-        {
-            return db.FirstOrDefault(result => result.Id == id);
-        }
-        
-        public void Delete(ITeam team)
-        {
-            if (team.Id.HasValue)
-                Delete(team.Id.Value);
+            var result = new EightBallPoolTeam
+            {
+                Id = dto.Id,
+                Players = GetPlayersFromCsv(dto.PlayersCsv)
+            };
+            SavePlayers(result.Players);
+            return result;
         }
 
-        public void Delete(int id)
+        private List<Player> GetPlayersFromCsv(string csv)
         {
-            
+            var players = csv.Split(',');
+            return _playerRepository.List().Where(x => players.Any(p => p == x.Id.ToString())).ToList();
+        }
+
+        private void SavePlayers(List<Player> players)
+        {
+            players.ForEach(p => _playerRepository.Save(p));
         }
     }
 }

@@ -13,7 +13,6 @@ namespace PoolScoreboard.Application.Interfaces
         T Save(T itemToSave);
         void Delete(T itemToUpdate);
         void Delete(int id);
-        List<T> List(Expression<Func<T, bool>> whereCondition);
         List<T> List();
     }
 
@@ -35,18 +34,13 @@ namespace PoolScoreboard.Application.Interfaces
         }
 
         protected abstract T CastFromDto(TDto dto);
-
-        public List<T> List(Expression<Func<T, bool>> whereCondition)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public List<T> List()
         {
             throw new NotImplementedException();
         }
 
-        public T Save(T item)
+        public virtual T Save(T item)
         {
             var dto = (TDto)_entityDtoFactory.Create(item);
             

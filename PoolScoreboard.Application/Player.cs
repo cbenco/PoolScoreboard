@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application
 {
     public interface IPlayer
     {
-        int Id { get; set; }
+        int? Id { get; set; }
         string Name { get; set; }
     }
     
-    public class Player : IPlayer
+    public class Player : ISaveable, IPlayer
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
 
         public override string ToString()

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using PoolScoreboard.Application.DataAccess.AppContext;
+using PoolScoreboard.Application.DataAccess.Match;
 using PoolScoreboard.Application.DataAccess.Team;
 using PoolScoreboard.Application.DataAccess.User;
 using PoolScoreboard.Application.Interfaces;
@@ -15,65 +16,23 @@ namespace PoolScoreboard.Application.DataAccess.Shot
         
     }
     
-    public class ShotResultRepository : IShotResultRepository
+    public class ShotResultRepository : Repository<ShotResult, ShotResultDto>, IShotResultRepository
     {
         private readonly IPlayerRepository _playerRepository = new PlayerRepository();
-        
-        public ShotResult Fetch(int id)
-        {
-            return new ShotResult();
-        }
-        
-        public List<ShotResult> List(Expression<Func<ShotResult, bool>> whereCondition)
-        {
-            return new List<ShotResult>();
-        }
+        private readonly IFrameRepository _frameRepository = new FrameRepository();
+        private readonly IPoolTeamRepository _teamRepository = new PoolTeamRepository();
 
-        public List<ShotResult> List()
+        protected override ShotResult CastFromDto(ShotResultDto dto)
         {
-            return new List<ShotResult>();
-        }
-        
-        public ShotResult Save(ShotResult shotResult)
-        {
-            var dto = new ShotResultDto(shotResult);
-
-            using (var db = new ScoreboardDatabase())
+            var result = new ShotResult
             {
-                if (!dto.Id.HasValue)
-                {
-                    db.ShotResults.Add(dto);
-                    shotResult.Id = dto.Id;
-                }
-                SwapShotResults(db.ShotResults, dto);
-                db.SaveChanges();
-            }
-            
-            return shotResult;
-        }
-
-        private void SwapShotResults(DbSet<ShotResultDto> db, ShotResultDto shot)
-        {
-            var resultFromDb = GetById(db, shot.Id ?? 0);
-            if (shot.Id.HasValue && shot.Id.Value != 0)
-                db.Remove(resultFromDb);
-            db.Add(shot);
-        }
-        
-        private ShotResultDto GetById(IQueryable<ShotResultDto> db, int id)
-        {
-            return db.FirstOrDefault(result => result.Id == id);
-        }
-        
-        public void Delete(ShotResult shotResult)
-        {
-            if (shotResult.Id.HasValue)
-                Delete(shotResult.Id.Value);
-        }
-
-        public void Delete(int id)
-        {
-            
+                Id = dto.Id,
+                Frame = _frameRepository.Fetch(dto.FrameId),
+                Shooter = _playerRepository.Fetch(dto.Shooter),
+                //ShootingTeam = _teamRepository.Fetch(dto.ShootingTeamId ?? 0),
+                Type = (ShotResultType) Enum.Parse(typeof(ShotResultType), dto.Type)
+            };
+            return result;
         }
     }
 }

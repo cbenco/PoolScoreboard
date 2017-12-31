@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application
 {
@@ -7,7 +8,7 @@ namespace PoolScoreboard.Application
     {
         int? Id { get; set; }
         Frame Frame { get; set; }
-        List<IPlayer> Players { get; set; }
+        List<Player> Players { get; set; }
         string PlayersCsv { get; }
         bool Breaker { get; set; }
         int ShotCount { get; }
@@ -16,10 +17,10 @@ namespace PoolScoreboard.Application
         BallClass Opposite { get; }
     }
     
-    public abstract class Team : ITeam
+    public abstract class Team : ISaveable, ITeam
     {
         public int? Id { get; set; }
-        public List<IPlayer> Players { get; set; }
+        public List<Player> Players { get; set; }
         public bool Breaker { get; set; }
         public int ShotCount { get; protected set; } = 0;
         public bool HasColours { get; set; }
@@ -36,12 +37,14 @@ namespace PoolScoreboard.Application
             }
         }
         
+        public Team() {}
+        
         public IPlayer ThisShooter => Players[LastShooterIndex];
         public IPlayer NextShooter => Players[LastShooterIndex++];
         
         protected int LastShooterIndex;
         
-        public Team(IEnumerable<IPlayer> players, int firstShooter = 0)
+        public Team(IEnumerable<Player> players, int firstShooter = 0)
         {
             Players = players.ToList();
             LastShooterIndex = firstShooter;
@@ -85,7 +88,8 @@ namespace PoolScoreboard.Application
     
     public class EightBallPoolTeam : Team
     {
-        public EightBallPoolTeam(IEnumerable<IPlayer> players, int firstShooter = 0) :
+        public EightBallPoolTeam() {}
+        public EightBallPoolTeam(IEnumerable<Player> players, int firstShooter = 0) :
             base(players, firstShooter)
         {
             HasColours = true;

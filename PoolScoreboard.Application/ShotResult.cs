@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application
 {
-    public class ShotResult
+    public class ShotResult : ISaveable
     {
         public int? Id { get; set; }
         
