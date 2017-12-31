@@ -8,11 +8,6 @@ using PoolScoreboard.Application.Interfaces;
 
 namespace PoolScoreboard.Application.DataAccess.Match
 {
-    public interface IFrameRepository : IRepository<Frame>
-    {
-        
-    }
-    
     public class FrameRepository : Repository<Frame, FrameDto>
     {
         protected override Frame CastFromDto(FrameDto dto)

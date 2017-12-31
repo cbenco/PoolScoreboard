@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Permissions;
 using PoolScoreboard.Application.DataAccess.Match;
 using PoolScoreboard.Application.DataAccess.Shot;
 using PoolScoreboard.Application.DataAccess.Team;
@@ -14,16 +15,14 @@ namespace PoolScoreboard.Application.DataAccess.AppContext
     {
         public EntityDto Create(object argument)
         {
-            var type = argument.GetType();
-            if (type == typeof(Type))
-                type = (Type)argument;
-            if (type == typeof(Application.Team))
+            var type = argument.GetType().Name;
+            if (type == "Team")
                 return new TeamDto((EightBallPoolTeam)argument);
-            if (type == typeof(ShotResult))
+            if (type == "ShotResult")
                 return new ShotResultDto((ShotResult)argument);
-            if (type == typeof(Frame))
+            if (type == "Frame")
                 return new FrameDto((Frame)argument);
-            if (type == typeof(Player))
+            if (type == "Player")
                 return new PlayerDto((Player)argument);
             
             throw new NotImplementedException();

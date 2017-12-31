@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using PoolScoreboard.Application.DataAccess.AppContext;
 
 namespace PoolScoreboard.Application.DataAccess.Match
@@ -11,7 +12,8 @@ namespace PoolScoreboard.Application.DataAccess.Match
         
         public FrameDto(Frame frame)
         {
-            Start = frame.Start.ToShortTimeString();
+            Id = frame.Id;
+            Start = frame.Start.ToString(CultureInfo.CurrentCulture);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using PoolScoreboard.Application.DataAccess.AppContext;
@@ -16,20 +17,20 @@ namespace PoolScoreboard.Application.Interfaces
         List<T> List();
     }
 
-    public abstract class Repository<T, TDto> : IRepository<T> where T : ISaveable where TDto : EntityDto
+    public abstract class Repository<T, TDto> : IRepository<T> where T : ISaveable, new() where TDto : EntityDto
     {
         private readonly IEntityDtoFactory _entityDtoFactory = new EntityDtoFactory();
 
         public T Fetch(int id)
         {
-            var dto = _entityDtoFactory.Create(typeof(T));
+            var dto = (TDto)_entityDtoFactory.Create(new T());
 
             using (var db = new ScoreboardDatabase())
             {
                 var dbSet = db.GetDbSet(dto);
                 dto = dbSet.FirstOrDefault(x => x.Id == id);
 
-                return CastFromDto((TDto)dto);
+                return CastFromDto(dto);
             }
         }
 
@@ -48,24 +49,23 @@ namespace PoolScoreboard.Application.Interfaces
         public T Save(T item)
         {
             var dto = (TDto)_entityDtoFactory.Create(item);
-
+            
             using (var db = new ScoreboardDatabase())
             {
                 var dbSet = db.GetDbSet(dto);
+                
                 if (!dto.Id.HasValue)
                 {
                     dbSet.Add(dto);
                 }
                 else
                 {
-                    var thing = dbSet.FirstOrDefault(x => x.Id == dto.Id);
-                    if (thing != null)
-                        thing = dto;
+                    dbSet.Attach(dto);
+                    db.Entry(dto).State = EntityState.Modified;
                 }
                 db.SaveChanges();
                 item.Id = dto.Id;
             }
-
             return item;
         }
 
@@ -74,7 +74,7 @@ namespace PoolScoreboard.Application.Interfaces
             if (item.Id.HasValue)
                 Delete(item.Id.Value);
         }
-
+        
         public void Delete(int id)
         {
 

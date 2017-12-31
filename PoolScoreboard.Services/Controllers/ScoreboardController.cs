@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.WebSockets;
 using PoolScoreboard.Application;
-using PoolScoreboard.Application.DataAccess.Shot;
-using PoolScoreboard.Application.DataAccess.Team;
+using PoolScoreboard.Application.DataAccess.Match;
 using PoolScoreboard.Application.Interfaces;
 using PoolScoreboard.Services.Factories;
 using PoolScoreboard.Services.Models;
@@ -14,16 +13,19 @@ namespace PoolScoreboard.Services.Controllers
     {
         private readonly ITableFactory _tableFactory = new TableFactory();
         private readonly ITableResponseFactory _tableResponseFactory = new TableResponseFactory();
-
-        private readonly IShotResultRepository _shotResultRepository = new ShotResultRepository();
+        
+        private readonly FrameRepository _frameRepository = new FrameRepository();
         
         public TableResponse CreateGame(Game gameType, string firstTeamPlayerNames, string secondTeamPlayerNames)
         {
             var table = _tableFactory.Create(gameType, 
                                         GetTeamNameStrings(firstTeamPlayerNames), 
                                         GetTeamNameStrings(secondTeamPlayerNames));
-
-
+            
+            var thing = _frameRepository.Fetch(5);
+            thing.Start = DateTime.Now.AddDays(2);
+            _frameRepository.Save(thing);
+            
             return _tableResponseFactory.Create(Game.EightBallPool, table);
         }
         
