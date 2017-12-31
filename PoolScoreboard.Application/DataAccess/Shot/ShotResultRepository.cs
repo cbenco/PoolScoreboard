@@ -39,7 +39,7 @@ namespace PoolScoreboard.Application.DataAccess.Shot
         {
             var dto = new ShotResultDto(shotResult);
 
-            using (var db = new ScoreboardDatabase("public"))
+            using (var db = new ScoreboardDatabase())
             {
                 if (!dto.Id.HasValue)
                 {
@@ -61,7 +61,7 @@ namespace PoolScoreboard.Application.DataAccess.Shot
             db.Add(shot);
         }
         
-        protected ShotResultDto GetById(DbSet<ShotResultDto> db, int id)
+        private ShotResultDto GetById(IQueryable<ShotResultDto> db, int id)
         {
             return db.FirstOrDefault(result => result.Id == id);
         }

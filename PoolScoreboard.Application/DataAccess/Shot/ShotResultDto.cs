@@ -8,8 +8,11 @@
         public string ObjectBall { get; set; }
         public string BallsSunkCsv { get; set; }
         public bool FirstLegalPot { get; set; }
-        public ShotResultType Type { get; set; }
+        public string Type { get; set; }
 
+        //I loathe having the constructor here, but what can you do
+        public ShotResultDto() {}
+        
         public ShotResultDto(ShotResult shotResult)
         {
             BallsSunkCsv = shotResult.ConvertBallsSunkToCsv();
@@ -18,7 +21,7 @@
             ObjectBall = shotResult.ObjectBall.Identifier;
             Shooter = shotResult.Shooter.Id;
             ShootingTeamId = shotResult.ShootingTeam.Id;
-            Type = shotResult.Type;
+            Type = shotResult.Type.ToString();
         }
     }
 }

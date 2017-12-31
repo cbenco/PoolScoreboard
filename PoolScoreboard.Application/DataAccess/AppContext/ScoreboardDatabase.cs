@@ -6,21 +6,20 @@ namespace PoolScoreboard.Application.DataAccess.AppContext
 {
     class ScoreboardDatabase : DbContext
     {
-        private readonly string _schema;
+        //private readonly string _schema;
 
-        public ScoreboardDatabase(string schema)
-            : base("AppDatabaseConnectionString")
+        public ScoreboardDatabase()
+            : base("name=ScoreboardConn")
         {
-            _schema = schema;
         }
 
         public DbSet<ShotResultDto> ShotResults { get; set; }
         public DbSet<PlayerDto> Players { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder builder)
+        /*protected override void OnModelCreating(DbModelBuilder builder)
         {
             builder.HasDefaultSchema(_schema);
             base.OnModelCreating(builder);
-        }
+        }*/
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using PoolScoreboard.Application;
+using PoolScoreboard.Application.DataAccess.Shot;
 using PoolScoreboard.Application.Interfaces;
 using PoolScoreboard.Services.Factories;
 using PoolScoreboard.Services.Models;
@@ -11,6 +12,8 @@ namespace PoolScoreboard.Services.Controllers
     {
         private readonly ITableFactory _tableFactory = new TableFactory();
         private readonly ITableResponseFactory _tableResponseFactory = new TableResponseFactory();
+        
+        private readonly IShotResultRepository _shotResultRepository = new ShotResultRepository();
         
         public TableResponse CreateGame(Game gameType, string firstTeamPlayerNames, string secondTeamPlayerNames)
         {

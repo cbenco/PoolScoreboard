@@ -14,14 +14,13 @@ namespace PoolScoreboard.Application
     {
         private Game _game = Game.EightBallPool;
         public static ITeam CurrentShooter { get; set; }
-        public ITeam Team1 { get; set; }
-        public ITeam Team2 { get; set; }
+        public ITeam Team1 { get; }
+        public ITeam Team2 { get; }
         
         private IShotResultFactory _shotResultFactory = new ShotResultFactory();
-        private IShotResultRepository _shotResultRepository = new ShotResultRepository();
         
         public Frame CurrentFrame;
-
+        
         public IRack Rack { get; }
         public static readonly IBall CueBall = new CueBall();
 
@@ -45,7 +44,6 @@ namespace PoolScoreboard.Application
             var shotResult = _shotResultFactory.Create(_game, CurrentShooter, 
                                                       Rack, objectBall, sunk);
             ProcessShot(shotResult);
-            _shotResultRepository.Save(shotResult);
             
             CueBall.OnTable = true;
             

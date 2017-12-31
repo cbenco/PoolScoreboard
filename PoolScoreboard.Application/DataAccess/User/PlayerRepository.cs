@@ -15,7 +15,7 @@ namespace PoolScoreboard.Application.DataAccess.User
     {
         public Player Fetch(int id)
         {
-            using (var db = new ScoreboardDatabase("public"))
+            using (var db = new ScoreboardDatabase())
             {
                 
             }
